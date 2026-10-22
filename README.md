@@ -2,6 +2,12 @@
 
 An iPod-style Cover Flow for whatever your phone is playing. Turn the bezel to flip through covers, press Back to open one, and triple-press Back to jump to Now Playing.
 
+<p align="center">
+  <img src="docs/now_playing.png" width="250" alt="Now Playing while a song plays">
+  <img src="docs/paused.png" width="250" alt="Now Playing while it's paused">
+</p>
+<p align="center"><sub>Now Playing on a Galaxy Watch4 Classic, playing and paused: the progress tube round the edge, its knob at where the song is</sub></p>
+
 The project has two halves of one app, Cover Display:
 
 | Module | What it is |
