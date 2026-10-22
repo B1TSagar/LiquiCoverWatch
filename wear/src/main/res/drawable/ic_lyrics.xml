@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lines of text with the middle one highlighted, like the lyrics screen. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path android:fillColor="#111418" android:pathData="M24,0a24,24 0 1,0 0.01,0z" />
+    <path android:fillColor="#4D5866" android:pathData="M14,14 L34,14 L34,17 L14,17 Z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M10,22.5 L38,22.5 L38,26.5 L10,26.5 Z" />
+    <path android:fillColor="#4D5866" android:pathData="M15,32 L33,32 L33,35 L15,35 Z" />
+    <path android:fillColor="#3FA9F5" android:pathData="M30,8 L30,12 A2,2 0 1,1 29,10.3 L29,8 Z" />
+</vector>

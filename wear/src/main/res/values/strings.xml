@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Cover Display</string>
+    <string name="lyrics_name">Lyrics</string>
+    <string name="cover_art_name">Album art</string>
+    <string name="album_colour_name">Album colour</string>
+    <string name="song_progress_name">Song progress</string>
+</resources>

@@ -1,0 +1,4 @@
+HSPLcom/coverflow/wear/**->**(**)**
+HSPLcom/coverflow/shared/**->**(**)**
+Lcom/coverflow/wear/**;
+Lcom/coverflow/shared/**;

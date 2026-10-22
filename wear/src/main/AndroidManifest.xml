@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <!-- Bezel detent ticks and button confirmations -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Always-on display: stay on screen in ambient mode. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- The LiquiWatch companion, told what's playing for the Expedition face's date pill. -->
+    <queries>
+        <package android:name="com.liquiwatch.companion" />
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CoverFlow">
+
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="false" />
+
+        <!-- A system trace recorded over adb (LiquiWatch's tools/trace) may show this app's own
+             marks (each cover, colour and progress it hands the faces, and how busy it finds the
+             watch), also from a release build. -->
+        <profileable android:shell="true" />
+
+        <!-- Needs the phone companion app. -->
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="false" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            A second app-list entry, "Lyrics", that opens straight into the lyrics screen.
+            Pick it under the watch's Home key double-press setting to get Home x2 = lyrics.
+        -->
+        <activity-alias
+            android:name=".LyricsLauncher"
+            android:exported="true"
+            android:icon="@drawable/ic_lyrics"
+            android:label="@string/lyrics_name"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!--
+            Straight into Now Playing, with no entry in the app list: the LiquiWatch · Expedition
+            face's date pill opens it while a song plays (the companion's tap action there).
+        -->
+        <activity-alias
+            android:name=".NowPlayingLauncher"
+            android:exported="true"
+            android:targetActivity=".MainActivity" />
+
+        <!-- The LiquiWatch companion asks what's playing when it starts afresh (NowPlayingLink). -->
+        <receiver
+            android:name=".face.NowPlayingRequestReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.coverflow.action.NOW_PLAYING_REQUEST" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+            The album art for watch faces: the playing song's cover, blurred, as a full-screen
+            photo; nothing while nothing plays (so the face shows its own background). The
+            LiquiWatch · Expedition face uses it by default.
+        -->
+        <service
+            android:name=".face.CoverArtComplicationService"
+            android:exported="true"
+            android:icon="@drawable/ic_cover_art"
+            android:label="@string/cover_art_name"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="PHOTO_IMAGE,SMALL_IMAGE" />
+            <!-- The LiquiWatch faces may show this as soon as they're picked, before the wearer
+                 grants them complication data (only those three: other faces still ask). -->
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="com.liquiwatch.face.expedition,com.liquiwatch.face.liquid,com.liquiwatch.face.covers" />
+            <!-- Sent as the music changes, never on a schedule: the system saves up scheduled
+                 updates while the screen is off and asks for them all as it wakes, which stalls
+                 the face for a moment. -->
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
+        </service>
+
+        <!--
+            The album colour for watch faces: the playing cover's colour, toned as Now Playing's
+            sliders, as the colour ramp of a full ranged value (no colour while nothing plays).
+            LiquiWatch · Expedition paints its hands with it.
+        -->
+        <service
+            android:name=".face.AlbumColourComplicationService"
+            android:exported="true"
+            android:icon="@drawable/ic_cover_art"
+            android:label="@string/album_colour_name"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="RANGED_VALUE" />
+            <!-- The LiquiWatch faces may show this as soon as they're picked, before the wearer
+                 grants them complication data (only those three: other faces still ask). -->
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="com.liquiwatch.face.expedition,com.liquiwatch.face.liquid,com.liquiwatch.face.covers" />
+            <!-- Sent as the music changes, never on a schedule: the system saves up scheduled
+                 updates while the screen is off and asks for them all as it wakes, which stalls
+                 the face for a moment. -->
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
+        </service>
+
+        <!--
+            Where the playing song is, for watch faces: when it started and when it ends, in the
+            album's colour (Now Playing's slider colour); nothing while the music is paused. The
+            LiquiWatch · Expedition face draws it as a thin line round its compass glass.
+        -->
+        <service
+            android:name=".face.SongProgressComplicationService"
+            android:exported="true"
+            android:icon="@drawable/ic_cover_art"
+            android:label="@string/song_progress_name"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="RANGED_VALUE" />
+            <!-- The LiquiWatch faces may show this as soon as they're picked, before the wearer
+                 grants them complication data (only those three: other faces still ask). -->
+            <meta-data
+                android:name="android.support.wearable.complications.SAFE_WATCH_FACES"
+                android:value="com.liquiwatch.face.expedition,com.liquiwatch.face.liquid,com.liquiwatch.face.covers" />
+            <!-- Sent again as the music plays, pauses, skips or seeks, never on a schedule (see the
+                 album art above). -->
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
+        </service>
+
+        <!--
+            Hears the phone's player state and covers with Cover Display closed, so the face's
+            album art follows the music.
+        -->
+        <service
+            android:name=".face.FaceSyncService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data
+                    android:host="*"
+                    android:path="/coverflow/state"
+                    android:scheme="wear" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/coverflow/cover/"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/coverflow/face/"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/coverflow/facenext/"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:path="/coverflow/facestate"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+
+        <!--
+            Bound by the LiquiWatch companion while its Expedition face is up, so the watch doesn't
+            freeze this app meanwhile (a frozen app isn't handed the phone's messages, and the face
+            never heard a song had started). Exported for the companion; it does nothing else.
+        -->
+        <service
+            android:name=".face.FaceKeeperService"
+            android:exported="true" />
+
+        <!-- After an update, the faces are asked for the album art, colour and progress again. -->
+        <receiver
+            android:name=".face.FaceRefresher"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

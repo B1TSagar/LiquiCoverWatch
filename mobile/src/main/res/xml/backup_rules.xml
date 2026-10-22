@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 11 and older. Settings, ratings and likes are backed up; caches that are fetched
+     again anyway are left out, so the backup stays under Google's 25 MB limit. -->
+<full-backup-content>
+    <exclude domain="file" path="covers_v3/" />
+    <exclude domain="file" path="lyrics/" />
+    <exclude domain="file" path="albums/" />
+</full-backup-content>

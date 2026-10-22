@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Album art and tracklist lookup (iTunes Search API) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Optional: lets the phone app open a music app from the background when you pick a song
+         on the watch while nothing is playing ("Display over other apps"). -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- With the watch linked as its companion device, Android keeps the phone app exempt from
+         battery restrictions by itself (and again after each update). Without that, a Samsung
+         phone froze it in the background and then killed it, so the watch heard of no new song
+         until Cover Display was opened on it. -->
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" />
+
+    <!-- Android's own "let this app run in the background?" prompt (step 3 in the phone app), for
+         when the watch can't be linked: the same exemption, asked for straight out. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <!-- To find the watch among the phone's paired devices when linking it (asked for as you tap
+         Link watch): the link dialog's own search never finds a paired, connected watch. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+
+    <!-- Linking the watch as a companion device (lets the phone app open music apps when you
+         pick a song on the watch). Optional: phones without it use "display over other apps". -->
+    <uses-feature
+        android:name="android.software.companion_device_setup"
+        android:required="false" />
+
+    <!-- Lets us see and start music apps on Android 11+ -->
+    <queries>
+        <intent>
+            <action android:name="android.media.browse.MediaBrowserService" />
+        </intent>
+        <intent>
+            <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MEDIA_BUTTON" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Material.NoActionBar">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Gives us access to the phone's active media sessions (what's playing, queue, art). -->
+        <service
+            android:name=".MediaListenerService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- Receives requests and commands from the watch. -->
+        <service
+            android:name=".WatchRequestService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/coverflow"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+    </application>
+</manifest>

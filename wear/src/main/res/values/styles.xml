@@ -1,0 +1,12 @@
+<resources>
+    <style name="Theme.CoverFlow" parent="@android:style/Theme.DeviceDefault">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowNoTitle">true</item>
+        <!--
+            The Back button drives this app (press = enter, double press = go back), so the
+            edge swipe-to-dismiss gesture is turned off. Leave with the Home key or double-press
+            Back on the Cover Flow screen.
+        -->
+        <item name="android:windowSwipeToDismiss">false</item>
+    </style>
+</resources>

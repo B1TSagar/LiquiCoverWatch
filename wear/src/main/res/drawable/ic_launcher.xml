@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Three tilted covers, Cover Flow style. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path android:fillColor="#111418" android:pathData="M24,0a24,24 0 1,0 0.01,0z" />
+    <path android:fillColor="#3A4654" android:pathData="M7,15 L17,18 L17,32 L7,35 Z" />
+    <path android:fillColor="#3A4654" android:pathData="M41,15 L31,18 L31,32 L41,35 Z" />
+    <path android:fillColor="#3FA9F5" android:pathData="M15,13 L33,13 L33,31 L15,31 Z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M21,17 L21,27 L29,22 Z" />
+    <path android:fillColor="#1F5277" android:pathData="M15,32 L33,32 L33,37 L15,37 Z" />
+</vector>
