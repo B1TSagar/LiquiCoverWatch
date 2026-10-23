@@ -572,6 +572,13 @@ object FaceArt {
             keepDecoded(key, it.bitmap)
         }
         readyNext = null
+        // (Sent under its queue entry's key: kept under the song's own too, or its round cover never
+        // reached the companion's date pill, and the song played again had to ask the phone.)
+        if (from != key) {
+            synchronized(rounds) { rounds[from]?.let { rounds[key] = it } }
+            val bytes = try { recentFile(ctx, from).readBytes() } catch (e: Exception) { null }
+            bytes?.let { b -> FaceArtPacket.fromBytes(b)?.let { remember(ctx, key, it, b) } }
+        }
         return true
     }
 
